@@ -151,6 +151,19 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   
   const getDesign = getStorageDesign(usedDesign)
+
+  if ((!storageIsLoading && storageData && storageData.isInstalled && storageData.isBaseConfigReady && !isSettingsPage)) {
+    return (
+      <>
+        <Head>
+          <title>{getText(`App_Title`, `NFTStake - Stake NFT - earn ERC20`)}</title>
+          <meta name="description" content={getText(`App_Description`, `NFTStake - Stake NFT - earn ERC20`)} />
+          <meta name="keywords" content={getText(`App_Keywords`, `NFT, Stake, ERC20, Blockchain`)} />
+        </Head>
+        <div>THIS IS VENDOR</div>
+      </>
+    )
+  }
   return (
     <div>
       <Head>
