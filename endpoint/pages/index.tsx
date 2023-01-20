@@ -11,9 +11,9 @@ const Home: NextPage = (props) => {
   const { isOwner, getText, getDesign } = props
 
   return (
-    <div className={styles.container}>
+    <>
       INDEX PAGE
-    </div>
+    </>
   );
 };
 

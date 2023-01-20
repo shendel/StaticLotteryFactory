@@ -86,11 +86,9 @@ export default function useStorage() {
         if (parsed) {
           const { owner } = storageData
 
-          const isBaseConfigReady = (
+          /* Check - App is configured */
+          const isBaseConfigReady =  true || (
             parsed.chainId !== ''
-            && parsed.nftCollection !== ''
-            && parsed.rewardToken !== ''
-            && parsed.farmContract !== ''
           )
 
           setStorageData({

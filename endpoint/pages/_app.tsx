@@ -57,8 +57,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       onConfirm,
       onCancel,
     } = options
-
-    console.log(options)
     confirmWindowOnConfirm = (onConfirm) ? onConfirm : () => {}
     confirmWindowOnCancel = (onCancel) ? onCancel : () => {}
     setConfirmWindowLabels({
