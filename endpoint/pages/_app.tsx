@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app"
 import Head from 'next/head'
+import Script from 'next/script'
 import "../styles/globals.css"
 import styles from "../styles/Home.module.css"
 import { getStorageText, getLink } from "../helpers"
@@ -13,6 +14,7 @@ import { getUnixTimestamp } from "../helpers/getUnixTimestamp"
 import NotifyHolder from "../components/NotifyHolder"
 import StorageStyles from "../components/StorageStyles"
 import { useRef } from "react"
+import { getAssets, getResource } from "../helpers/getAssets"
 
 let confirmWindowOnConfirm = () => {}
 let confirmWindowOnCancel = () => {}
@@ -153,15 +155,44 @@ function MyApp({ Component, pageProps }: AppProps) {
   const getDesign = getStorageDesign(usedDesign)
 
   if ((!storageIsLoading && storageData && storageData.isInstalled && storageData.isBaseConfigReady && !isSettingsPage)) {
+    //const _vendorLoader = getResource('vendor_loader.js')
+
+    //console.log(_vendorLoader)
+    const _venderLoadOptions = {
+      chainId: 97,
+      chainName: "Binance Smart Chain (BEP20) - Testnet",
+      rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      etherscan: "https://testnet.bscscan.com",
+      contract: "0xBDfE5B434F4E87Ff4F5888ba58df4E1f1F3a0171",
+      token: {
+        symbol: "BBF",
+        address: "0x6e93480f8003E81ac7a106928d589698986666C0",
+        decimals: "18",
+        title: "Bunny Blocks Finance",
+        price: false,
+        viewDecimals: 2      },
+      buyTokenLink: false,
+      numbersCount: parseInt("6", 10),
+    }
+    console.log(_venderLoadOptions)
+
     return (
-      <>
+      <div>
         <Head>
           <title>{getText(`App_Title`, `NFTStake - Stake NFT - earn ERC20`)}</title>
           <meta name="description" content={getText(`App_Description`, `NFTStake - Stake NFT - earn ERC20`)} />
           <meta name="keywords" content={getText(`App_Keywords`, `NFT, Stake, ERC20, Blockchain`)} />
+          <script>
+            {`
+              window.__vendorOptionsInited = true;
+              window.__vendorOptions = ${JSON.stringify(_venderLoadOptions)};
+            `}
+          </script>
+          <script src={getResource('vendor_loader.js')}></script>
         </Head>
         <div>THIS IS VENDOR</div>
-      </>
+
+      </div>
     )
   }
   return (
