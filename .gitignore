@@ -1,0 +1,12 @@
+.DS_Store
+.idea
+.yarn
+.pnp.js
+.tmp
+
+*-lock.*
+
+node_modules
+node_modules_
+
+frontend/build/*
