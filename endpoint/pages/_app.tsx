@@ -16,6 +16,7 @@ import StorageStyles from "../components/StorageStyles"
 import { useRef } from "react"
 import { getAssets, getResource } from "../helpers/getAssets"
 
+
 let confirmWindowOnConfirm = () => {}
 let confirmWindowOnCancel = () => {}
 const defaultConfirmWindowLabels = {
@@ -151,50 +152,84 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
 
+  const _renderLoadOptions = {
+    chainId: 420420,
+    chainName: 'Kek-chain',
+    rpc: "https://mainnet.kekchain.com/",
+    etherscan: "https://mainnet-explorer.kekchain.com",
+    contract: "0xE686b71eC00E0D259fc4efD0541a7AdD62f806F4",
+    token: {
+      symbol: "Duck Token",
+      address: "0x6330e9B2C21fE22c17Be8c955b12C4e11be675db",
+      decimals: "18",
+      title: "XDCK",
+      price: false,
+      viewDecimals: 2      },
+    buyTokenLink: false,
+    numbersCount: parseInt("2", 10),
+    hideServiceLink: false,
+    winPercents: {
+      burn: 2,
+      match_1: 39.2,
+      match_2: 58.8,
+      match_3: 6.125,
+      match_4: 12.25,
+      match_5: 24.5,
+      match_6: 49,
+    }
+  }
   
   const getDesign = getStorageDesign(usedDesign)
+  
+  const [ vendorSetting, setVendorSetting ] = useState(_renderLoadOptions) //_renderLoadOptions)
+  
+  const [ venderScript, setVendorScript ] = useState(false)
+  
+  let isVenderLoaded  = true
+  
+  console.log('_renderLoadOptions', vendorSetting)
 
-  if ((!storageIsLoading && storageData && storageData.isInstalled && storageData.isBaseConfigReady && !isSettingsPage)) {
+  useEffect(() => {
+    
+  }, [vendorSetting])
+
+  const [ loadFront, setLoadFront ] = useState(false)
+  
+
+  
+  if ((!storageIsLoading && storageData && storageData.isInstalled && storageData.isBaseConfigReady && !isSettingsPage && vendorSetting)) {
     //const _vendorLoader = getResource('vendor_loader.js')
-
-    //console.log(_vendorLoader)
-    const _venderLoadOptions = {
-      chainId: 97,
-      chainName: "Binance Smart Chain (BEP20) - Testnet",
-      rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      etherscan: "https://testnet.bscscan.com",
-      contract: "0xBDfE5B434F4E87Ff4F5888ba58df4E1f1F3a0171",
-      token: {
-        symbol: "BBF",
-        address: "0x6e93480f8003E81ac7a106928d589698986666C0",
-        decimals: "18",
-        title: "Bunny Blocks Finance",
-        price: false,
-        viewDecimals: 2      },
-      buyTokenLink: false,
-      numbersCount: parseInt("6", 10),
-    }
-    console.log(_venderLoadOptions)
-
+    //if (!loadFront) return null
+    
+    
     return (
       <div>
         <Head>
-          <title>{getText(`App_Title`, `NFTStake - Stake NFT - earn ERC20`)}</title>
-          <meta name="description" content={getText(`App_Description`, `NFTStake - Stake NFT - earn ERC20`)} />
-          <meta name="keywords" content={getText(`App_Keywords`, `NFT, Stake, ERC20, Blockchain`)} />
-          <script>
-            {`
-              window.__vendorOptionsInited = true;
-              window.__vendorOptions = ${JSON.stringify(_venderLoadOptions)};
-            `}
-          </script>
-          <script src={getResource('vendor_loader.js')}></script>
+          <title>{getText(`App_Title`, `App title`)}</title>
+          <meta name="description" content={getText(`App_Description`, `desc`)} />
+          <meta name="keywords" content={getText(`App_Keywords`, `keywords`)} />
         </Head>
-        <div>THIS IS VENDOR</div>
+        <div>THIS IS VENDOR 123</div>
+        
+        <div>
+          <div id="lottery-style-holder"></div>
+          <div id="root" class="alignfull"></div>
+          <div id="portal-root"></div>
+        </div>
+        <Script>
+          {`
+            window._appHost = '/_MYAPP/'
+            window.SO_LotteryConfig = ${JSON.stringify(vendorSetting)}
+          `}
+        </Script>
 
+        <Script strategy="lazyOnload" src="/_MYAPP/loader.js"></Script>
+        <Script src="/_MYAPP/vendor/2.chunk.js"></Script>
+        <Script src="/_MYAPP/vendor/main.chunk.js"></Script>
       </div>
     )
   }
+
   return (
     <div>
       <Head>

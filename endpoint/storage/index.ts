@@ -77,6 +77,7 @@ export default function useStorage() {
 
         try {
           storageData = await storage.methods.getData(getCurrentDomain()).call()
+          console.log('>>> storageData.info', storageData.info)
           parsed = parseInfo(storageData.info || '{}')
         } catch (error) {
           console.log('>>> error', error)

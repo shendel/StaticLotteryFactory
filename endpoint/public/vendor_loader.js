@@ -35,10 +35,11 @@
   console.log(window.SO_LotteryConfig)
 
 
-
+/*
   appendDiv(`lottery-style-holder`)
   appendDiv(`root`)
   appendDiv(`portal-root`)
+  */
   /*
   appendScript(`/_MYAPP/loader.js`)
   appendScript(`/_MYAPP/vendor/2.chunk.js`)
