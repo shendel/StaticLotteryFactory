@@ -708,6 +708,14 @@
   padding-bottom: 0px;
 }
 
+.adminForm .infoTable {
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 1px solid gray;
+  padding: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 0px;
+}
 .adminForm .subFormInfo .infoRow>SPAN,
 .adminForm .subFormInfo .infoRow>DIV,
 .adminForm .subFormInfo .infoRow>DIV.contentHolder {

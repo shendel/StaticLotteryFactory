@@ -10,7 +10,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
 import { getUnixTimestamp } from "../helpers/getUnixTimestamp"
-
+import { CHAIN_INFO } from "../helpers/constants"
 import NotifyHolder from "../components/NotifyHolder"
 import StorageStyles from "../components/StorageStyles"
 import { useRef } from "react"
@@ -152,6 +152,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [])
 
 
+  
   const _renderLoadOptions = {
     chainId: 420420,
     chainName: 'Kek-chain',
@@ -164,9 +165,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       decimals: "18",
       title: "XDCK",
       price: false,
-      viewDecimals: 2      },
+      viewDecimals: 2
+    },
     buyTokenLink: false,
-    numbersCount: parseInt("2", 10),
+    numbersCount: 2,
     hideServiceLink: false,
     winPercents: {
       burn: 2,
@@ -181,27 +183,46 @@ function MyApp({ Component, pageProps }: AppProps) {
   
   const getDesign = getStorageDesign(usedDesign)
   
-  const [ vendorSetting, setVendorSetting ] = useState(_renderLoadOptions) //_renderLoadOptions)
+  const [ vendorSetting, setVendorSetting ] = useState({})
   
-  const [ venderScript, setVendorScript ] = useState(false)
   
   let isVenderLoaded  = true
-  
-  console.log('_renderLoadOptions', vendorSetting)
 
   useEffect(() => {
-    
-  }, [vendorSetting])
+    if (!storageIsLoading) {
+      const chainInfo = CHAIN_INFO(storageData.chainId)
+      setVendorSetting({
+        chainId: storageData.chainId,
+        chainName: chainInfo.chainName,
+        rpc: chainInfo.rpcUrls[0],
+        etherscan: chainInfo.blockExplorerUrls[0],
+        contract: storageData.lotteryAddress,
+        token: {
+          ...storageData.tokenInfo,
+          price: false,
+          viewDecimals: 2
+        },
+        buyTokenLink: false,
+        numbersCount: 2,
+        hideServiceLink: false,
+        winPercents: {
+          burn: 2,
+          match_1: 39.2,
+          match_2: 58.8,
+          match_3: 6.125,
+          match_4: 12.25,
+          match_5: 24.5,
+          match_6: 49,
+        }
+      })
+    }
+  }, [storageIsLoading])
 
   const [ loadFront, setLoadFront ] = useState(false)
   
 
   
   if ((!storageIsLoading && storageData && storageData.isInstalled && storageData.isBaseConfigReady && !isSettingsPage && vendorSetting)) {
-    //const _vendorLoader = getResource('vendor_loader.js')
-    //if (!loadFront) return null
-    
-    
     return (
       <div>
         <Head>
@@ -209,8 +230,6 @@ function MyApp({ Component, pageProps }: AppProps) {
           <meta name="description" content={getText(`App_Description`, `desc`)} />
           <meta name="keywords" content={getText(`App_Keywords`, `keywords`)} />
         </Head>
-        <div>THIS IS VENDOR 123</div>
-        
         <div>
           <div id="lottery-style-holder"></div>
           <div id="root" class="alignfull"></div>

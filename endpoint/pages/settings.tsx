@@ -3,6 +3,8 @@ import styles from "../styles/Home.module.css"
 import navBlock from "../components/navBlock"
 import adminFormRow from "../components/adminFormRow"
 import TabDesign from "../components/settings/TabDesign"
+import TabMain from "../components/settings/TabMain"
+
 
 import useStorage from "../storage/"
 import { useEffect, useState } from "react"
@@ -341,6 +343,16 @@ const Settings: NextPage = (props) => {
   /* -------------------------------------------- */
   //console.log('>>> storageData', storageData, showInstallBox, (storageData && !storageData.isInstalled), !isInstalledOnDomain)
 
+  const tabMain = new TabMain({
+    setDoReloadStorage,
+    saveStorageConfig,
+    openConfirmWindow,
+    addNotify,
+    getActiveChain,
+    storageChainId,
+    storageData
+  })
+
   if (isInstalledOnDomain) showInstallBox = false
   return (
     <div className={styles.container}>
@@ -386,7 +398,7 @@ const Settings: NextPage = (props) => {
                       </ul>
                       <hr className={`${styles.divider} ${styles.spacerTop}`} />
                       {/* -------------------------------------------------*/ }
-                      {activeTab === `main` && (<div>Main tab</div>)}
+                      {activeTab === `main` && tabMain.render()}
                     </>
                   ) : (
                     <h2>Access denied</h2>

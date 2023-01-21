@@ -37,7 +37,10 @@ const parseInfo = (info) => {
   const parsed = {
     chainId: '',
     texts: {},
-    design: {}
+    design: {},
+    tokenAddress: ``,
+    lotteryAddress: ``,
+    tokenInfo: {},
   }
   const result = JSON.parse(info)
 
