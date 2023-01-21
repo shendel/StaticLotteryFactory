@@ -45,7 +45,28 @@ export default function adminFormRow(options) {
             <span className={styles.hasError}>{errorText}</span>
           )}
           <div>
-            <input type={inputType} placeholder={placeholder || ``} value={value} onChange={(v) => onChange(v.target.value)} />
+            {(() => {
+              switch (inputType) {
+                case `number`:
+                  return (
+                    <input {
+                        ...{
+                          min: options?.minValue || undefined,
+                          max: options?.maxValue || undefined,
+                        }
+                      }
+                      type="number"
+                      placeholder={placeholder || ``}
+                      value={value}
+                      onChange={(v) => { onChange(v.target.value) }}
+                    />
+                  )
+                default:
+                  return (
+                    <input type={inputType} placeholder={placeholder || ``} value={value} onChange={(v) => onChange(v.target.value)} />
+                  )
+              }
+            })()}
           </div>
         </>
       )}

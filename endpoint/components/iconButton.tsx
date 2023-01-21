@@ -7,7 +7,8 @@ export default function iconButton(options) {
     title,
     icon,
     onClick,
-    target
+    target,
+    disabled,
   } = {
     href: ``,
     title: ``,
@@ -17,7 +18,7 @@ export default function iconButton(options) {
   }
 
   const aAttrs = {
-    className: styles.iconButton,
+    className: `${styles.iconButton} ${(disabled) ? styles.iconButtonDisabled : ''}`,
     alt: title,
     title,
   }
@@ -25,7 +26,7 @@ export default function iconButton(options) {
   if (target) aAttrs.target = target
  
   return (
-    <a {...aAttrs} onClick={onClick}>
+    <a {...aAttrs} onClick={() => { if (!disabled) onClick() }}>
       <FaIcon icon={icon} />
     </a>
   )

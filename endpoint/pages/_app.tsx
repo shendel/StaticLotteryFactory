@@ -15,6 +15,7 @@ import NotifyHolder from "../components/NotifyHolder"
 import StorageStyles from "../components/StorageStyles"
 import { useRef } from "react"
 import { getAssets, getResource } from "../helpers/getAssets"
+import callLotteryMethod from "../helpers/callLotteryMethod"
 
 
 let confirmWindowOnConfirm = () => {}
@@ -32,6 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     storageIsLoading,
     isOwner,
     setDoReloadStorage,
+    setDoReloadStorageFast,
     storageTexts,
     storageDesign,
   } = useStorage()
@@ -188,8 +190,20 @@ function MyApp({ Component, pageProps }: AppProps) {
   
   let isVenderLoaded  = true
 
+  const [ ballsCount, setBallsCount ] = useState(2)
+
   useEffect(() => {
     if (!storageIsLoading) {
+      callLotteryMethod({
+        isCall: true,
+        chainId: storageData.chainId,
+        contractAddress: storageData.lotteryAddress,
+        method: 'numbersCount',
+        args: []
+      }).then((_count) => {
+        setBallsCount(_count)
+        console.log('bals count', _count)
+      })
       const chainInfo = CHAIN_INFO(storageData.chainId)
       setVendorSetting({
         chainId: storageData.chainId,
@@ -203,24 +217,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           viewDecimals: 2
         },
         buyTokenLink: false,
-        numbersCount: 2,
+        numbersCount: ballsCount,
         hideServiceLink: false,
         winPercents: {
-          burn: 2,
-          match_1: 39.2,
-          match_2: 58.8,
-          match_3: 6.125,
-          match_4: 12.25,
-          match_5: 24.5,
-          match_6: 49,
+          burn: parseFloat(storageData.burn),
+          ...storageData.matchRules,
         }
       })
     }
-  }, [storageIsLoading])
-
-  const [ loadFront, setLoadFront ] = useState(false)
-  
-
+  }, [storageIsLoading, ballsCount])
   
   if ((!storageIsLoading && storageData && storageData.isInstalled && storageData.isBaseConfigReady && !isSettingsPage && vendorSetting)) {
     return (
@@ -309,6 +314,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 isOwner={isOwner}
                 addNotify={addNotify}
                 setDoReloadStorage={setDoReloadStorage}
+                setDoReloadStorageFast={setDoReloadStorageFast}
                 storageTexts={storageTexts}
                 storageDesign={storageDesign}
                 getText={getText}

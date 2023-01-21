@@ -41,6 +41,15 @@ const parseInfo = (info) => {
     tokenAddress: ``,
     lotteryAddress: ``,
     tokenInfo: {},
+    burn: 2,
+    matchRules: {
+      match_1: 39.2,
+      match_2: 58.8,
+      match_3: 6.125,
+      match_4: 12.25,
+      match_5: 24.5,
+      match_6: 49,
+    }
   }
   const result = JSON.parse(info)
 
@@ -63,9 +72,10 @@ export default function useStorage() {
   const storage = useStorageContract()
   
   const [ doReloadStorage, setDoReloadStorage ] = useState(true)
+  const [ doReloadStorageFast, setDoReloadStorageFast ] = useState(false)
 
   useEffect(() => {
-    if (doReloadStorage) {
+    if (doReloadStorage || doReloadStorageFast) {
       const fetchData = async () => {
         if (!storage) {
           console.log('>>> no storage')
@@ -73,7 +83,7 @@ export default function useStorage() {
         }
         
         setError(null)
-        setStorageIsLoading(true)
+        if (!doReloadStorageFast) setStorageIsLoading(true)
         
         let parsed: any
         let owner
@@ -109,13 +119,13 @@ export default function useStorage() {
             setIsOwner(true)
           }
         }
-        
+        setDoReloadStorageFast(false)
         setStorageIsLoading(false)
       }
       fetchData()
-      setDoReloadStorage(false)
+      if (!doReloadStorageFast) setDoReloadStorage(false)
     }
-  }, [ doReloadStorage ])
+  }, [ doReloadStorage, doReloadStorageFast])
 
   return {
     storageIsLoading,
@@ -126,5 +136,6 @@ export default function useStorage() {
     storageTexts,
     storageDesign,
     setDoReloadStorage,
+    setDoReloadStorageFast,
   }
 }

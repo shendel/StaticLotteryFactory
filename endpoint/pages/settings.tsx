@@ -4,6 +4,7 @@ import navBlock from "../components/navBlock"
 import adminFormRow from "../components/adminFormRow"
 import TabDesign from "../components/settings/TabDesign"
 import TabMain from "../components/settings/TabMain"
+import TabGameRules from "../components/settings/TabGameRules"
 
 
 import useStorage from "../storage/"
@@ -39,6 +40,7 @@ import {
 
 const settingsTabs = {
   main: `Main settings`,
+  gamerules: `Game rules`,
   texts: `Edit texts`,
   design: `Design`,
 }
@@ -72,6 +74,7 @@ const Settings: NextPage = (props) => {
     openConfirmWindow,
     addNotify,
     setDoReloadStorage,
+    setDoReloadStorageFast,
     storageTexts,
     storageDesign,
   } = props
@@ -205,6 +208,7 @@ const Settings: NextPage = (props) => {
             }
           ).send(setupTxData).then(() => {
             setIsStorageSave(false)
+            setDoReloadStorageFast(true)
             if (onReady) onReady()
           }).catch((e) => {
             console.log('>>> error', e)
@@ -343,6 +347,10 @@ const Settings: NextPage = (props) => {
   /* -------------------------------------------- */
   //console.log('>>> storageData', storageData, showInstallBox, (storageData && !storageData.isInstalled), !isInstalledOnDomain)
 
+  const getStorageData = () => {
+    return storageData
+  }
+
   const tabMain = new TabMain({
     setDoReloadStorage,
     saveStorageConfig,
@@ -353,6 +361,17 @@ const Settings: NextPage = (props) => {
     storageData
   })
 
+  const tabGameRules = new TabGameRules({
+    setDoReloadStorage,
+    saveStorageConfig,
+    openConfirmWindow,
+    addNotify,
+    getActiveChain,
+    storageChainId,
+    storageData,
+    getStorageData,
+  })
+    
   if (isInstalledOnDomain) showInstallBox = false
   return (
     <div className={styles.container}>
@@ -399,6 +418,7 @@ const Settings: NextPage = (props) => {
                       <hr className={`${styles.divider} ${styles.spacerTop}`} />
                       {/* -------------------------------------------------*/ }
                       {activeTab === `main` && tabMain.render()}
+                      {activeTab === `gamerules` && tabGameRules.render()}
                     </>
                   ) : (
                     <h2>Access denied</h2>

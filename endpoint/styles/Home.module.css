@@ -742,10 +742,16 @@
 
 .adminForm .subFormInfo H3 {
   background: gray;
-  margin: -10px;
-  margin-bottom: 0px;
   padding: 5px;
   font-size: 10pt;
+  margin: -10px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.adminForm .subFormInfo H3:first-child {
+  margin: -10px;
+  margin-bottom: 0px;
 }
 
 .adminForm .subFormInfo B.hasError {
@@ -893,10 +899,16 @@
   margin-left: 4px;
   margin-right: 4px;
   text-align: center;
+  cursor: pointer;
 }
 
 .iconButton:hover {
   background: #0089ff;
+}
+
+.iconButton.iconButtonDisabled,
+.iconButton.iconButtonDisabled:hover {
+  background: gray;
 }
 
 .adminInfoError {
