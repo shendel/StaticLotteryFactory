@@ -111,7 +111,6 @@ const Settings: NextPage = (props) => {
   }
 
   const onNetworkChanged = (newActiveChainId) => {
-    console.log('>>> newActiveChainId', newActiveChainId)
     setActiveChainId(newActiveChainId)
   }
 
@@ -120,7 +119,6 @@ const Settings: NextPage = (props) => {
       activeWeb3.eth.getAccounts().then((accounts) => {
         setAddress(accounts[0])
         const _storageContract = new activeWeb3.eth.Contract(STORAGE_JSON.abi, storageAddress)
-        console.log('>>> storageContract', _storageContract)
         setStorageContract(_storageContract)
       }).catch((err) => {
         console.log('>>> initOnWeb3Ready', err)

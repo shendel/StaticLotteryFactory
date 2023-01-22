@@ -60,13 +60,11 @@ export default function TabControl(options) {
   const doFetchLotteryStatus = () => {
     
     if (storageData.chainId && storageData.lotteryAddress) {
-      console.log('>>> Fetch lottery status')
       addNotify(`Fetching lottery status`)
       fetchLotteryStatus({
         chainId: storageData.chainId,
         contractAddress: storageData.lotteryAddress,
       }).then((lotteryStatus) => {
-        console.log('>>> lotteryStatus', lotteryStatus)
         addNotify(`Lottery status fetched`, `success`)
         setLotteryStatus(lotteryStatus)
         setCurrentRound(lotteryStatus.currentLotteryInfo)
@@ -104,7 +102,6 @@ export default function TabControl(options) {
   }, [currentRound])
 
   useEffect(() => {
-    console.log('>>> useEffect')
     doFetchLotteryStatus()
   }, [storageData])
   
@@ -263,13 +260,35 @@ export default function TabControl(options) {
   const [ isDrawingNumbers, setIsDrawingNumber ] = useState(false)
   
   const doDrawNumbers = () => {
+    const lotteryRandSalt = genSalt()
+    const calcedHash = sha256(`${lotteryRandSalt}${drawNumbersSalt}`)
+    setIsDrawingNumber(true)
+    addNotify(`Drawing winning numbers. Confirm transaction`)
+    
+    const chainInfo = getActiveChain()
+    callLotteryMethod({
+      activeWeb3: chainInfo.activeWeb3,
+      contractAddress: storageData.lotteryAddress,
+      method: 'drawFinalNumberAndMakeLotteryClaimable',
+      args: [
+        lotteryStatus.currentLotteryNumber,
+        `0x${calcedHash}`,
+        true
+      ],
+    }).then((res) => {
+      setIsDrawingNumber(false)
+      doFetchLotteryStatus()
+      addNotify(`Winning numbers drawed!`, `success`)
+    }).catch((err) => {
+      setIsDrawingNumber(false)
+      addNotify(`Fail draw winning numbers. ${err.message ? err.message : ''}`, `error`)
+    })
   }
 
   return {
     render: () => {
       return (
         <div className={styles.adminForm}>
-          <div>Current stage:{currentStage}</div>
           {currentStage === `lottery_start` && (
             <div className={styles.subFormInfo}>
               <h3>Start new lottery round</h3>

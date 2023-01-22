@@ -18,8 +18,6 @@ export default function TabGameRules(options) {
     getStorageData,
   } = options
 
-  console.log('>>> storageData', storageData)
-
   const [ newTotalSum, setNewTotalSum ] = useState(0)
   const [ newUndist, setNewUndist ] = useState(0)
   const [ newBallsCount, setNewBallsCount ] = useState(0)
@@ -51,7 +49,6 @@ export default function TabGameRules(options) {
         args: []
       }).then((_count) => {
         onChangeBallsCount(_count)
-        console.log('bals count', _count)
       })
     }
   }, [storageData])
