@@ -21,8 +21,8 @@ export default function TabDesign(options) {
     storageDesign,
   } = options
 
-  const _lsPreviewMode = localStorage.getItem(`-nft-stake-preview-mode`)
-  let _lsPreviewDesign = localStorage.getItem(`-nft-stake-preview-design`)
+  const _lsPreviewMode = localStorage.getItem(`-lotery-preview-mode`)
+  let _lsPreviewDesign = localStorage.getItem(`-lotery-preview-design`)
   try {
     _lsPreviewDesign = JSON.parse(_lsPreviewDesign)
     _lsPreviewDesign = {
@@ -40,14 +40,16 @@ export default function TabDesign(options) {
     ...storageDesign,
   }
 
+  console.log('initialDesign', initialDesign)
   const [ designValues, setDesignValues ] = useState(_lsPreviewMode ? _lsPreviewDesign : initialDesign)
   const [ isSaveDesign, setIsSaveDesign ] = useState(false)
 
-
+  console.log('>>> designValues', designValues)
   const renderColor = (options) => {
     const {
       title,
       target,
+      defValue,
     } = options
 
     const onChange = (newColor) => {
@@ -65,7 +67,7 @@ export default function TabDesign(options) {
         <span>
           <div>
             <InputColor
-              initialValue={designValues[target]}
+              initialValue={designValues[target] ? designValues[target] : defValue}
               onChange={onChange}
               placement="right"
             />
@@ -202,142 +204,72 @@ export default function TabDesign(options) {
     render: () => {
       return (
         <div className={styles.adminForm}>
-          <div className={styles.subFormInfo}>
             {toggleGroup({
-              title: 'Main settings',
-              isOpened: openedTabs?.mainSettings,
-              onToggle: () => { toggleTab('mainSettings') },
+              title: 'Header settings',
+              isOpened: openedTabs?.headerSection,
+              onToggle: () => { toggleTab('headerSection') },
               content: (
-                <>
-                  {renderUri({ title: 'Logo uri', target: 'logoUri' })}
-                  {renderNumber({ title: 'Logo max width', target: 'logoMaxWidth', unit: 'px' })}
-                  {renderColor({ title: 'Background color', target: 'backgroundColor' })}
-                  {renderUri({ title: 'Background image', target: 'backgroundImage' })}
-                  {renderColor({ title: 'Base text color', target: 'baseTextColor' })}
-                  {renderColor({ title: 'Page title color', target: 'pageTitleColor' })}
-                  {renderColor({ title: 'HR line color', target: 'hrColor' })}
-                  <h5>Primary button</h5>
-                  {renderColor({ title: 'Background color #1', target: 'prButtonBg1' })}
-                  {renderColor({ title: 'Background color #2', target: 'prButtonBg2' })}
-                  
-                  {renderColor({ title: 'Text color', target: 'prButtonColor' })}
-                  {renderColor({ title: 'Background (disabled)', target: 'prButtonDisabledBg' })}
-                  {renderColor({ title: 'Text color (disabled)', target: 'prButtonDisabledColor' })}
-                  {renderNumber({ title: 'Border radius', target: 'prButtonBorderRadius', unit: 'px' })}
-                </>
+                <div className={styles.subFormInfo}>
+                  <div className={styles.subForm}>
+                    {renderColor({ title: 'Background color 1', target: 'headerBgColor1', defValue: '#7645D9' })}
+                    {renderColor({ title: 'Background color 2', target: 'headerBgColor2', defValue: '#452A7A' })}
+                  </div>
+                </div>
               )
             })}
             {toggleGroup({
-              title: 'Header Navigate menu',
-              isOpened: openedTabs?.headerNav,
-              onToggle: () => { toggleTab('headerNav') },
+              title: 'Buy tickets section',
+              isOpened: openedTabs?.buyTicketsSection,
+              onToggle: () => { toggleTab('buyTicketsSection') },
               content: (
-                <>
-                  {renderColor({ title: 'Background color', target: 'navMenuBgColor' })}
-                  {renderColor({ title: 'Link color', target: 'navMenuColor' })}
-                  {renderColor({ title: 'Link hover color', target: 'navMenuHoverColor' })}
-                  {renderColor({ title: 'Active item color', target: 'navMenuActiveColor' })}
-                  {renderColor({ title: 'Bottom line color', target: 'navMenuBottomLineColor' })}
-                  {renderNumber({ title: 'Bottom line size', target: 'navMenuBottomLineSize' })}
-                </>
+                <div className={styles.subFormInfo}>
+                  <div className={styles.subForm}>
+                    {renderColor({ title: 'Background color 1', target: 'buyTicketBgColor1', defValue: '#7645D9' })}
+                    {renderColor({ title: 'Background color 2', target: 'buyTicketBgColor2', defValue: '#5121B1' })}
+                  </div>
+                </div>
               )
             })}
             {toggleGroup({
-              title: 'Footer',
-              isOpened: openedTabs?.footer,
-              onToggle: () => { toggleTab('footer') },
+              title: 'Price section',
+              isOpened: openedTabs?.priceSection,
+              onToggle: () => { toggleTab('priceSection') },
               content: (
-                <>
-                  {renderColor({ title: 'Top line color', target: 'footerTopLineColor' })}
-                  {renderNumber({ title: 'Top line size', target: 'footerTopLineSize' })}
-                  {renderColor({ title: 'Background color', target: 'footerBgColor' })}
-                  {renderColor({ title: 'Text color', target: 'footerTextColor' })}
-                  {renderColor({ title: 'Link color', target: 'footerLinkColor' })}
-                  {renderColor({ title: 'Link color (hover)', target: 'footerLinkHoverColor' })}
-                </>
+                <div className={styles.subFormInfo}>
+                  <div className={styles.subForm}>
+                    {renderColor({ title: 'Background color 1', target: 'priceSectionBgColor1', defValue: '#313D5C' })}
+                    {renderColor({ title: 'Background color 2', target: 'priceSectionBgColor2', defValue: '#3D2A54' })}
+                  </div>
+                </div>
               )
             })}
             {toggleGroup({
-              title: 'Main page',
-              isOpened: openedTabs?.mainPage,
-              onToggle: () => { toggleTab('mainPage') },
+              title: 'Rounds history section',
+              isOpened: openedTabs?.roundsHistory,
+              onToggle: () => { toggleTab('roundsHistory') },
               content: (
-                <>
-                  {renderColor({ title: 'After title text color', target: 'mainPageTextAfterTitleColor' })}
-                  <h5>Main page sections</h5>
-                  {renderColor({ title: 'Background color', target: 'mainPageSectionBackground' })}
-                  {renderColor({ title: 'Border color', target: 'mainPageSectionBorderColor' })}
-                  {renderColor({ title: 'Title color', target: 'mainPageSectionTitleColor' })}
-                  {renderColor({ title: 'Descripton color', target: 'mainPageSectionDescColor' })}
-                  <hr />
-                  {renderColor({ title: 'After sections text color', target: 'mainPageTextAfterSectionsColor' })}
-                </>
+                <div className={styles.subFormInfo}>
+                  <div className={styles.subForm}>
+                    {renderColor({ title: 'Background color 1', target: 'roundsHistoryBgColor1', defValue: '#CBD7EF' })}
+                    {renderColor({ title: 'Background color 2', target: 'roundsHistoryBgColor2', defValue: '#9A9FD0' })}
+                  </div>
+                </div>
               )
             })}
             {toggleGroup({
-              title: 'NFT Token design',
-              isOpened: openedTabs?.nftToken,
-              onToggle: () => { toggleTab('nftToken') },
+              title: 'How to play settings',
+              isOpened: openedTabs?.howToPlay,
+              onToggle: () => { toggleTab('howToPlay') },
               content: (
-                <>
-                  {renderColor({ title: 'Background color', target: 'nftBackgroundColor' })}
-                  {renderColor({ title: 'Border color', target: 'nftBorderColor' })}
-                  {renderColor({ title: 'TokenId color', target: 'nftIdColor' })}
-                  {renderNumber({ title: 'Border radius', target: 'nftBorderRadius', unit: 'px' })}
-                  {renderNumber({ title: 'Border size', target: 'nftBorderSize', unit: 'px' })}
-                  {renderNumber({ title: 'Image max-height', target: 'nftMaxHeight', unit: 'px' })}
-                </>
+                <div className={styles.subFormInfo}>
+                  <div className={styles.subForm}>
+                    {renderColor({ title: 'Background color', target: 'howToPlayBgColor', defValue: '#ffffff' })}
+                  </div>
+                </div>
               )
             })}
-            {toggleGroup({
-              title: 'Mint page',
-              isOpened: openedTabs?.mintPage,
-              onToggle: () => { toggleTab('mintPage') },
-              content: (
-                <>
-                  <h5>Connect wallet section</h5>
-                  {renderColor({ title: 'Color of text before connect wallet button', target: 'mintBeforeConnectColor'})}
-                  {renderColor({ title: 'Color of text after connect wallet button', target: 'mintAfterConnectColor'})}
-                  <h5>Main section</h5>
-                  {renderColor({ title: 'Color of subtitle "Mint NFT"', target: 'mintPageSubTitleColor'})}
-                  {renderColor({ title: 'Color of text before price', target: 'mintPageBeforePriceColor' })}
-                  {renderColor({ title: 'Color of mint price', target: 'mintPagePriceColor'})}
-                  {renderColor({ title: 'Color of text after price', target: 'mintPageAfterPriceColor' })}
-                </>
-              )
-            })}
-            {toggleGroup({
-              title: 'Stake page',
-              isOpened: openedTabs?.stakePage,
-              onToggle: () => { toggleTab('stakePage') },
-              content: (
-                <>
-                  <h5>Connect wallet section</h5>
-                  {renderColor({ title: 'Color of text before connect wallet button', target: 'stakeBeforeConnectColor'})}
-                  {renderColor({ title: 'Color of text after connect wallet button', target: 'stakeAfterConnectColor'})}
-                  {renderColor({ title: 'Connected wallet label color', target: 'stakeConnectWalletColor' })}
-                  <h5>Reward section and bank section</h5>
-                  {renderColor({ title: 'Color of text before label', target: 'stakeBeforeYourRewardColor' })}
-                  {renderColor({ title: '"Your reward" label color', target: 'stakeYourRewardColor' })}
-                  {renderColor({ title: 'Color of text after label', target: 'stakeAfterYourRewardColor' })}
-                  <hr />
-                  {renderColor({ title: 'Background color', target: 'stakeRewardBackground' })}
-                  {renderColor({ title: 'Title color', target: 'stakeRewardTitleColor' })}
-                  {renderColor({ title: 'Amount color', target: 'stakeRewardAmountColor' })}
-                  {renderColor({ title: 'Border color', target: 'stakeRewardBorderColor' })}
-                  {renderNumber({ title: 'Border size', target: 'stakeRewardBorderSize', unit: 'px'})}
-                  {renderNumber({ title: 'Border radius', target: 'stakeRewardBorderRadius', unit: 'px'})}
-                  <h5>Stake and unstake section</h5>
-                  {renderColor({ title: '"Your staked NFTs" color', target: 'stakeYourStakedColor' })}
-                  {renderColor({ title: 'Color of text after "Your staked NFTs"', target: 'stakeYourStakedDescColor' })}
-                  {renderColor({ title: '"Your Unstaked NFTs" color', target: 'stakeYourUnstakedColor' })}
-                  {renderColor({ title: 'Color of text after "Your Unstaked NFTs"', target: 'stakeYourUnstakedDescColor' })}
-                </>
-              )
-            })}
-            
-            
-            <div className={styles.actionsRow}>
+
+            <div className={styles.actionsRowMain}>
               {isPreviewMode ? (
                 <>
                   <button onClick={offPreviewDesign}>
@@ -353,7 +285,6 @@ export default function TabDesign(options) {
                 Save changes
               </button>
             </div>
-          </div>
         </div>
       )
     }

@@ -282,7 +282,7 @@ export default function TabMain(options) {
                 </div>
               </>
             )}
-            <div>
+            <div className={styles.actionsRowMain}>
               <button disabled={isSaveToStorage} onClick={doSaveToStorage} className={styles.secondaryButton}>
                 {isSaveToStorage ? `Saving...` : `Save to storage config`}
               </button>

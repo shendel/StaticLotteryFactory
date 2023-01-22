@@ -6,6 +6,7 @@ import TabDesign from "../components/settings/TabDesign"
 import TabMain from "../components/settings/TabMain"
 import TabGameRules from "../components/settings/TabGameRules"
 import TabControl from "../components/settings/TabControl"
+import TabTexts from "../components/settings/TabTexts"
 
 
 import useStorage from "../storage/"
@@ -354,6 +355,7 @@ const Settings: NextPage = (props) => {
 
   const _tabSettings = {
     setDoReloadStorage,
+    setDoReloadStorageFast,
     saveStorageConfig,
     openConfirmWindow,
     addNotify,
@@ -361,11 +363,15 @@ const Settings: NextPage = (props) => {
     storageChainId,
     storageData,
     getStorageData,
+    storageDesign,
+    storageTexts,
   }
 
   const tabMain = new TabMain(_tabSettings)
   const tabGameRules = new TabGameRules(_tabSettings)
   const tabControl = new TabControl(_tabSettings)
+  const tabTexts = new TabTexts(_tabSettings)
+  const tabDesign = new TabDesign(_tabSettings)
     
   if (isInstalledOnDomain) showInstallBox = false
   return (
@@ -415,6 +421,8 @@ const Settings: NextPage = (props) => {
                       {activeTab === `main` && tabMain.render()}
                       {activeTab === `gamerules` && tabGameRules.render()}
                       {activeTab === `rounds` && tabControl.render()}
+                      {activeTab === `texts` && tabTexts.render()}
+                      {activeTab === `design` && tabDesign.render()}
                     </>
                   ) : (
                     <h2>Access denied</h2>

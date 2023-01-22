@@ -795,6 +795,12 @@
   margin-left: 10px;
 }
 
+.adminForm .actionsRowMain {
+  padding: 10px;
+}
+.adminForm .actionsRowMain BUTTON {
+  margin: 10px;
+}
 .openInNewTab {
   padding: 10px;
   color: #5baccb;
