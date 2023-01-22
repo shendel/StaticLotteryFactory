@@ -1132,3 +1132,16 @@
 .hasError {
   color: #d70909;
 }
+
+.errorBlock {
+  display: block;
+  width: 50%;
+  border: 2px solid #d39595;
+  background: #ad0b0b;
+  color: #FFF;
+  padding: 20px;
+  font-weight: bold;
+}
+.errorBlock SPAN {
+  display: block;
+}

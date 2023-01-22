@@ -54,8 +54,7 @@ export default function TabMain(options) {
   
   const [ newTokenInfo, setNewTokenInfo ] = useState(storageData?.tokenInfo)
   const [ isTokenFetching, setIsTokenFetching ] = useState(false)
-  const [ isTokenFetched, setIsTokenFetched ] = useState(storageData?.tokenInfo?.address !== ``)
-  
+  const [ isTokenFetched, setIsTokenFetched ] = useState(storageData.tokenInfo.address !== undefined)
   const [ isSaveToStorage, setIsSaveToStorage ] = useState(false)
   
   const doSaveToStorage = () => {
@@ -199,7 +198,7 @@ export default function TabMain(options) {
                     </>
                   )
                 })}
-                {isTokenFetched && newTokenInfo && newTokenInfo.symbol && (
+                {isTokenFetched && newTokenInfo && newTokenInfo.address && (
                   <div className={styles.subFormInfo}>
                     <h3>Token info</h3>
                     <div className={styles.subForm}>
@@ -248,7 +247,7 @@ export default function TabMain(options) {
                         </button>
                       )
                     })}
-                    {isTokenFetched && newTokenInfo && (
+                    {isTokenFetched && newTokenInfo && newTokenInfo.address && (
                       <div className={styles.infoTable}>
                         <h3>Token info</h3>
                         <div className={styles.infoRow}>

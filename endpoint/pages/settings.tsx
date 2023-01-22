@@ -259,17 +259,17 @@ const Settings: NextPage = (props) => {
     saveStorageConfig({
       onBegin: () => {
         setIsSettingUpOnDomain(true)
-        addNotify(`Confirm transaction for setup NFTStake on this domain`)
+        addNotify(`Confirm transaction for setup Lottery on this domain`)
       },
       onReady: async () => {
         setIsSettingUpOnDomain(false)
         setIsInstalledOnDomain(true)
-        addNotify(`NFTStake successfull installed on this domain. Now you can configure farm`, `success`)
+        addNotify(`Lottery successfull installed on this domain. Now you can configure farm`, `success`)
         setDoReloadStorage(true)
       },
       onError: (err) => {
         setIsSettingUpOnDomain(false)
-        addNotify(`Fail setup NFTStake on domain`, `error`)
+        addNotify(`Fail setup Lottery on domain`, `error`)
       },
       newData: {
         isInstalled: true,
@@ -305,7 +305,7 @@ const Settings: NextPage = (props) => {
       onReady: () => {
         setIsSettingUpOnDomain(false)
         setIsInstalledOnDomain(true)
-        addNotify(`NFTStake main config successfull saved`, `success`)
+        addNotify(`Lottery main config successfull saved`, `success`)
       },
       onError: (err) => {
         setIsSettingUpOnDomain(false)

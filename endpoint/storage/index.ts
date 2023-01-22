@@ -103,8 +103,13 @@ export default function useStorage() {
           const { owner } = storageData
 
           /* Check - App is configured */
-          const isBaseConfigReady =  true || (
+          const isBaseConfigReady =  (
             parsed.chainId !== ''
+            && parsed.chainId
+            && parsed.lotteryAddress
+            && parsed.tokenAddress
+            && parsed.tokenInfo
+            && parsed.tokenInfo.address
           )
 
           setStorageData({

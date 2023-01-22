@@ -157,6 +157,14 @@ export default function TabGameRules(options) {
 
   return {
     render: () => {
+      if (!storageData.lotteryAddress) {
+        return (
+          <div className={styles.errorBlock}>
+            <span>Section not accessible</span>
+            <span>Deploy and save the lottery contract first</span>
+          </div>
+        )
+      }
       return (
         <div className={styles.adminForm}>
           <div className={styles.subFormInfo}>
