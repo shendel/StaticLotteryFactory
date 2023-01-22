@@ -249,6 +249,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <div id="root" class="alignfull"></div>
           <div id="portal-root"></div>
         </div>
+        <StorageStyles getDesign={getDesign} />
         <Script>
           {`
             window._appHost = '/_MYAPP/'

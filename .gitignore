@@ -13,4 +13,3 @@ frontend/build/*
 endpoint/out/*
 endpoint/build/*
 endpoint/public/vendor/*
-endpoint/public/vendor_source/*
