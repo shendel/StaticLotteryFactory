@@ -76,7 +76,7 @@ export default function TabTexts(options) {
         </label>
         {(multiline || multilineView) ? (
           <textarea
-            value={newText[code] !== undefined ? newTexts[code] : defValue}
+            value={newTexts[code] !== undefined ? newTexts[code] : defValue}
             onChange={(e) => { updateStorageText(code, e.target.value) }}
           ></textarea>
         ) : (
