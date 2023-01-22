@@ -45,12 +45,12 @@ const parseInfo = (info) => {
     ticketPrice: 1,
     balls: 6,
     matchRules: {
-      match_1: 39.2,
-      match_2: 58.8,
-      match_3: 6.125,
-      match_4: 12.25,
-      match_5: 24.5,
-      match_6: 49,
+      match_1: 2,
+      match_2: 3,
+      match_3: 5,
+      match_4: 15,
+      match_5: 25,
+      match_6: 50,
     }
   }
   const result = JSON.parse(info)

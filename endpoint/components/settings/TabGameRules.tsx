@@ -170,7 +170,7 @@ export default function TabGameRules(options) {
                     {iconButton({
                       title: `Save to contract`,
                       onClick: doSaveBallsCount,
-                      disabled: isSaveBallsCount || !isBallsChanged,
+                      disabled: isSaveBallsCount,
                       icon: 'save',
                     })}
                   </div>

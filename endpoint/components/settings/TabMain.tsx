@@ -41,7 +41,6 @@ export default function TabMain(options) {
     storageData,
   } = options
 
-  console.log('>>> storageData', storageData)
   const [ newChainId, setNewChainId ] = useState(storageData?.chainId)
   const [ newLotteryContract, setNewLotteryContract ] = useState(storageData?.lotteryAddress)
   const [ newLotteryTokenAddress, setNewLotteryTokenAddress ] = useState(storageData?.tokenAddress)
@@ -95,7 +94,6 @@ export default function TabMain(options) {
       setNewTokenInfo({})
       addNotify(`Fetching token info`)
       fetchTokenInfo(newLotteryTokenAddress, newChainId).then((_tokenInfo) => {
-        console.log(_tokenInfo)
         setIsTokenFetching(false)
         setNewTokenInfo(_tokenInfo)
         setIsTokenFetched(true)
@@ -201,7 +199,7 @@ export default function TabMain(options) {
                     </>
                   )
                 })}
-                {isTokenFetched && newTokenInfo && (
+                {isTokenFetched && newTokenInfo && newTokenInfo.symbol && (
                   <div className={styles.subFormInfo}>
                     <h3>Token info</h3>
                     <div className={styles.subForm}>

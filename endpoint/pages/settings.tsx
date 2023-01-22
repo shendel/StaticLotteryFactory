@@ -385,7 +385,7 @@ const Settings: NextPage = (props) => {
                 <>
                   {renderActiveChainInfo()}
                   <button disabled={isSettingUpOnDomain} className={`${styles.mainButton} ${styles.autoWidth} primaryButton`} onClick={doSetupOnDomain}>
-                    {isSettingUpOnDomain ? `Setup on domain...` : `Setup NFTStake on this domain`}
+                    {isSettingUpOnDomain ? `Setup on domain...` : `Setup Lottery on this domain`}
                   </button>
                 </>
               )}

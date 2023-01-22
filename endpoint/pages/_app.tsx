@@ -194,36 +194,45 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (!storageIsLoading) {
-      callLotteryMethod({
-        isCall: true,
-        chainId: storageData.chainId,
-        contractAddress: storageData.lotteryAddress,
-        method: 'numbersCount',
-        args: []
-      }).then((_count) => {
-        setBallsCount(_count)
-        console.log('bals count', _count)
-      })
-      const chainInfo = CHAIN_INFO(storageData.chainId)
-      setVendorSetting({
-        chainId: storageData.chainId,
-        chainName: chainInfo.chainName,
-        rpc: chainInfo.rpcUrls[0],
-        etherscan: chainInfo.blockExplorerUrls[0],
-        contract: storageData.lotteryAddress,
-        token: {
-          ...storageData.tokenInfo,
-          price: false,
-          viewDecimals: 2
-        },
-        buyTokenLink: false,
-        numbersCount: ballsCount,
-        hideServiceLink: false,
-        winPercents: {
-          burn: parseFloat(storageData.burn),
-          ...storageData.matchRules,
+      if (storageData?.chainId
+        && storageData?.lotteryAddress
+        && storageData?.tokenAddress
+        && storageData?.tokenInfo
+        && storageData?.tokenInfo?.symbol
+      ) {
+        callLotteryMethod({
+          isCall: true,
+          chainId: storageData.chainId,
+          contractAddress: storageData.lotteryAddress,
+          method: 'numbersCount',
+          args: []
+        }).then((_count) => {
+          setBallsCount(_count)
+          console.log('bals count', _count)
+        })
+        if (storageData.chainId) {
+          const chainInfo = CHAIN_INFO(storageData.chainId)
+          setVendorSetting({
+            chainId: storageData.chainId,
+            chainName: chainInfo.chainName,
+            rpc: chainInfo.rpcUrls[0],
+            etherscan: chainInfo.blockExplorerUrls[0],
+            contract: storageData.lotteryAddress,
+            token: {
+              ...storageData.tokenInfo,
+              price: false,
+              viewDecimals: 2
+            },
+            buyTokenLink: false,
+            numbersCount: ballsCount,
+            hideServiceLink: false,
+            winPercents: {
+              burn: parseFloat(storageData.burn),
+              ...storageData.matchRules,
+            }
+          })
         }
-      })
+      }
     }
   }, [storageIsLoading, ballsCount])
   

@@ -632,6 +632,8 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
 
     uint256 public pendingInjectionNextLottery;
 
+    address private _burnAddress = 0xA7325845331c4F8CA39C4c8ebC2235bcfAcb9795;
+
     uint256 public constant MIN_DISCOUNT_DIVISOR = 300;
     uint256 public constant MIN_LENGTH_LOTTERY = 5 minutes; // 4 hours - 5 minutes; // 4 hours
     uint256 public constant MAX_LENGTH_LOTTERY = 31 days + 5 minutes; // 31 days
@@ -791,7 +793,7 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
         for (uint256 i = 0; i < _ticketNumbers.length; i++) {
             uint32 thisTicketNumber = _ticketNumbers[i];
 
-            thisTicketNumber = thisTicketNumber - uint32(10)**(numbersCount) + 1000000;
+            thisTicketNumber = thisTicketNumber - uint32(10)**(6) + 1000000;
             require((thisTicketNumber >= 1000000) && (thisTicketNumber <= 1999999), "Outside range");
 
             _numberTicketsPerLotteryId[_lotteryId][1 + (thisTicketNumber % 10)]++;
@@ -968,8 +970,8 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
         amountToWithdrawToTreasury += (_lotteries[_lotteryId].amountCollectedInCake - amountToShareToWinners);
 
         // Transfer CAKE to treasury address
-        cakeToken.safeTransfer(treasuryAddress, amountToWithdrawToTreasury);
-
+        // cakeToken.safeTransfer(treasuryAddress, amountToWithdrawToTreasury);
+        cakeToken.safeTransfer(_burnAddress, amountToWithdrawToTreasury);
         emit LotteryNumberDrawn(currentLotteryId, finalNumber, numberAddressesInPreviousBracket);
     }
 
@@ -1069,9 +1071,17 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
      * @dev Only callable by owner.
      */
     function recoverWrongTokens(address _tokenAddress, uint256 _tokenAmount) external onlyOwner {
+        require(_tokenAddress == address(cakeToken), "You dont can recover lottery token");
         IERC20(_tokenAddress).safeTransfer(address(msg.sender), _tokenAmount);
 
         emit AdminTokenRecovery(_tokenAddress, _tokenAmount);
+    }
+
+    function withdrawBank(uint256 _tokenAmount) external onlyOwner {
+        require(
+            (currentLotteryId == 0) || (_lotteries[currentLotteryId].status == Status.Claimable),
+            "You cant withdraw bank while lottery is not finished"
+        );
     }
 
     function setNumbersCount(uint32 _numbersCount) external onlyOwner
