@@ -634,6 +634,8 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
 
     address private _burnAddress = 0xA7325845331c4F8CA39C4c8ebC2235bcfAcb9795;
 
+    uint256 public withdrawCooldown = 31 days;
+
     uint256 public constant MIN_DISCOUNT_DIVISOR = 300;
     uint256 public constant MIN_LENGTH_LOTTERY = 5 minutes; // 4 hours - 5 minutes; // 4 hours
     uint256 public constant MAX_LENGTH_LOTTERY = 31 days + 5 minutes; // 31 days
@@ -1082,6 +1084,20 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
             (currentLotteryId == 0) || (_lotteries[currentLotteryId].status == Status.Claimable),
             "You cant withdraw bank while lottery is not finished"
         );
+        require(
+            (_lotteries[currentLotteryId].endTime + withdrawCooldown) > block.timestamp,
+            "Withdraw cooldown!"
+        );
+
+    }
+    function withdrawBank2(uint256 _tokenAmount) external onlyOwner {
+        require(
+            (currentLotteryId == 0) || (_lotteries[currentLotteryId].status == Status.Claimable),
+            "You cant withdraw bank while lottery is not finished"
+        );
+        require(block.timestamp > _lotteries[currentLotteryId].endTime + withdrawCooldown, "Withdraw cooldown!");
+
+        cakeToken.safeTransfer(msg.sender, _tokenAmount);
     }
 
     function setNumbersCount(uint32 _numbersCount) external onlyOwner
