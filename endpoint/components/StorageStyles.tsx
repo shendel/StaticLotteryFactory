@@ -113,7 +113,7 @@ export default function StorageStyles(options) {
         
         .howToPlay {
           background: ${getDesign('howToPlayBgColor', 'color')};
-        
+        }
         .howToPlay H2 {
           color: ${getDesign('howToPlayTitleColor', 'color')};
         }
