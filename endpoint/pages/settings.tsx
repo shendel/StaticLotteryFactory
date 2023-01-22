@@ -5,6 +5,7 @@ import adminFormRow from "../components/adminFormRow"
 import TabDesign from "../components/settings/TabDesign"
 import TabMain from "../components/settings/TabMain"
 import TabGameRules from "../components/settings/TabGameRules"
+import TabControl from "../components/settings/TabControl"
 
 
 import useStorage from "../storage/"
@@ -40,7 +41,8 @@ import {
 
 const settingsTabs = {
   main: `Main settings`,
-  gamerules: `Game rules`,
+  gamerules: `Rules`,
+  rounds: `Rounds`,
   texts: `Edit texts`,
   design: `Design`,
 }
@@ -245,6 +247,7 @@ const Settings: NextPage = (props) => {
 
   const getActiveChain = () => {
     return {
+      activeAccount: address,
       activeChainId,
       activeWeb3,
     }
@@ -351,17 +354,7 @@ const Settings: NextPage = (props) => {
     return storageData
   }
 
-  const tabMain = new TabMain({
-    setDoReloadStorage,
-    saveStorageConfig,
-    openConfirmWindow,
-    addNotify,
-    getActiveChain,
-    storageChainId,
-    storageData
-  })
-
-  const tabGameRules = new TabGameRules({
+  const _tabSettings = {
     setDoReloadStorage,
     saveStorageConfig,
     openConfirmWindow,
@@ -370,7 +363,11 @@ const Settings: NextPage = (props) => {
     storageChainId,
     storageData,
     getStorageData,
-  })
+  }
+
+  const tabMain = new TabMain(_tabSettings)
+  const tabGameRules = new TabGameRules(_tabSettings)
+  const tabControl = new TabControl(_tabSettings)
     
   if (isInstalledOnDomain) showInstallBox = false
   return (
@@ -419,6 +416,7 @@ const Settings: NextPage = (props) => {
                       {/* -------------------------------------------------*/ }
                       {activeTab === `main` && tabMain.render()}
                       {activeTab === `gamerules` && tabGameRules.render()}
+                      {activeTab === `rounds` && tabControl.render()}
                     </>
                   ) : (
                     <h2>Access denied</h2>

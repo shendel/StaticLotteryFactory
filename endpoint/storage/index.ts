@@ -42,6 +42,8 @@ const parseInfo = (info) => {
     lotteryAddress: ``,
     tokenInfo: {},
     burn: 2,
+    ticketPrice: 1,
+    balls: 6,
     matchRules: {
       match_1: 39.2,
       match_2: 58.8,

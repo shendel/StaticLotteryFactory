@@ -22,7 +22,40 @@ export default function TabGameRules(options) {
 
   const [ newTotalSum, setNewTotalSum ] = useState(0)
   const [ newUndist, setNewUndist ] = useState(0)
-  const [ newBallsCount, setNewBallsCount ] = useState(6)
+  const [ newBallsCount, setNewBallsCount ] = useState(0)
+  const [ isBallsChanged, setIsBallsChanged ] = useState(false)
+  const [ newTicketPrice, setNewTicketPrice ] = useState(storageData.ticketPrice)
+  const [ isTicketPriceError, setIsTicketPriceError ] = useState(false)
+  const [ isTicketPriceChanged, setIsTicketPriceChanged ] = useState(false)
+
+  const onTicketPriceChange = (v) => {
+    setIsTicketPriceError(false)
+    try {
+      v = parseFloat(v)
+      if (v < 0) setIsTicketPriceError(true)
+      if (v > 50) setIsTicketPriceError(true)
+    } catch (e) {
+      setIsTicketPriceError(true)
+    }
+    setNewTicketPrice(v)
+    setIsTicketPriceChanged(storageData.ticketPrice !== v)
+  }
+
+  useEffect(() => {
+    if (storageData.lotteryAddress && storageData.chainId) {
+      callLotteryMethod({
+        isCall: true,
+        chainId: storageData.chainId,
+        contractAddress: storageData.lotteryAddress,
+        method: 'numbersCount',
+        args: []
+      }).then((_count) => {
+        onChangeBallsCount(_count)
+        console.log('bals count', _count)
+      })
+    }
+  }, [storageData])
+  
   const [ newMatchRules, setNewMatchRules ] = useState(storageData.matchRules || {
     match_1: 39.2,
     match_2: 58.8,
@@ -32,7 +65,7 @@ export default function TabGameRules(options) {
     match_6: 49,
   })
   const [ matchArray, setMatchArray ] = useState([1,2,3,4,5,6])
-  const [ isSaveBallsCount, setIsSaveBallsCount ] = useState(true)
+  const [ isSaveBallsCount, setIsSaveBallsCount ] = useState(false)
   const [ isSaveMatches, setIsSaveMatches ] = useState(false)
 
   const [ newBurn, setNewBurn ] = useState(storageData.burn)
@@ -41,6 +74,7 @@ export default function TabGameRules(options) {
     if (newCount<2) newCount = 2
     if (newCount>6) newCount = 6
     setNewBallsCount(newCount)
+    //setIsBallsChanged(storageData.balls !== newCount)
     setMatchArray((prev) => {
       return [1,2,3,4,5,6].filter((matchCount) => matchCount <= parseInt(newCount) )
     })
@@ -70,23 +104,34 @@ export default function TabGameRules(options) {
 
   
   const doSaveBallsCount = () => {
-    const storage = getStorageData()
-    console.log(storage)
-    callLotteryMethod({
-      isCall: true,
-      chainId: storage.chainId,
-      contractAddress: storage.lotteryAddress,
-      method: 'numbersCount',
-      args: []
-    }).then((res) => {
-      console.log('>>> res', res)
+    openConfirmWindow({
+      title: 'Save changes to Lottery',
+      message: 'Save new count of balls?',
+      onConfirm: () => {
+        setIsSaveBallsCount(true)
+        const { activeWeb3 } = getActiveChain()
+        addNotify(`Confirm transaction`)
+        callLotteryMethod({
+          activeWeb3,
+          contractAddress: storageData.lotteryAddress,
+          method: 'setNumbersCount',
+          args: [ newBallsCount ],
+        }).then((res) => {
+          setIsSaveBallsCount(false)
+          setIsBallsChanged(false)
+          addNotify(`Changes saved`, `success`)
+        }).catch((err) => {
+          setIsSaveBallsCount(false)
+          addNotify(`Fail save balls count. ${err.message ? err.message : ''}`, `error`)
+        })
+      }
     })
   }
 
   const doSaveMatches = () => {
     openConfirmWindow({
       title: `Save match rules`,
-      message: `Save winning balls match rules to storage config?`,
+      message: `Save winning balls match rules, burn amount and ticket price to storage config?`,
       onConfirm: () => {
         setIsSaveMatches(true)
         addNotify(`Saving winning rules...`)
@@ -105,6 +150,8 @@ export default function TabGameRules(options) {
           newData: {
             matchRules: newMatchRules,
             burn: newBurn,
+            balls: newBallsCount,
+            ticketPrice: newTicketPrice,
           }
         })
       }
@@ -126,6 +173,7 @@ export default function TabGameRules(options) {
                     {iconButton({
                       title: `Save to contract`,
                       onClick: doSaveBallsCount,
+                      disabled: isSaveBallsCount || !isBallsChanged,
                       icon: 'save',
                     })}
                   </div>
@@ -205,9 +253,32 @@ export default function TabGameRules(options) {
                   )}
                 </div>
               </div>
+              <div className={styles.infoRow}>
+                <label>Ticket price:</label>
+                <div>
+                  <div>
+                    <input type="number" step="0.1" min="0" value={newTicketPrice} onChange={(e) => { onTicketPriceChange(e.target.value) }} />
+                    <strong>{storageData?.tokenInfo?.symbol}</strong>
+                  </div>
+                  {isTicketPriceError && (
+                    <div className={styles.hasError}>
+                      <strong>Price must be between 0.00000000001 and 50</strong>
+                    </div>
+                  )}
+                </div>
+              </div>
               <div className={styles.actionsRow}>
-                <button disabled={newUndist !== 0 || isSaveMatches} onClick={doSaveMatches}>
-                  {isSaveMatches ? 'Saving...' : 'Save match rules and burn amount'}
+                {isBallsChanged && (
+                  <strong className={styles.hasError}>
+                    Save balls count first!
+                  </strong>
+                )}
+                {/*disabled={isTicketPriceError || newUndist !== 0 || isSaveMatches || isBallsChanged || isTicketPriceChanged} */}
+                <button
+                  disabled={isSaveMatches}
+                  onClick={doSaveMatches}
+                >
+                  {isSaveMatches ? 'Saving...' : 'Save match rules, burn amount and ticket price'}
                 </button>
               </div>
             </div>

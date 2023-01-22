@@ -1074,6 +1074,7 @@
   padding-left: 4px;
   padding-right: 4px;
   outline: 1px solid #FFF;
+  white-space: nowrap;
 }
 .buttonWithIcon:hover {
   background: #1762bf;
@@ -1126,4 +1127,8 @@
 
 .formTabs>DIV.formTabsActive {
   display: block;
+}
+
+.hasError {
+  color: #d70909;
 }
