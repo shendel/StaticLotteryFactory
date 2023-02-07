@@ -297,7 +297,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <>
           {!storageIsLoading && storageData && !storageData.isInstalled && !isSettingsPage && (
             <div className={styles.container}>
-              <h2>Application need install on this domain</h2>
+              <h2>The application needs to be installed on this domain.</h2>
               <a href={getLink(`settings`)} className={`${styles.mainButton} ${styles.autoWidth} primaryButton`}>
                 Go to Install
               </a>
