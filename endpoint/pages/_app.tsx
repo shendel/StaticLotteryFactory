@@ -43,6 +43,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const routerBaseName = router.asPath.split('/').reverse()[0];
 
   const isSettingsPage = (routerBaseName === settingsUrl)
+  console.log('>>> isSettingsPage', isSettingsPage, routerBaseName, settingsUrl)
 
   /* Confirm window */
   const [ isConfirmWindowOpened, setIsConfirmWindowOpened ] = useState(false)

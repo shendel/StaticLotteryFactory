@@ -18,12 +18,54 @@ export default function TabTexts(options) {
     openConfirmWindow,
     addNotify,
     getActiveChain,
-    storageData
+    storageData,
+    storageTexts
   } = options
 
   const [ newTexts, setNewTexts ] = useState(storageData.texts)
   const [ isSaveTexts, setIsSaveTexts ] = useState(false)
+  
+  const _lsPreviewMode = localStorage.getItem(`-nft-stake-preview-text-mode`)
+  let _lsPreviewTexts = localStorage.getItem(`-nft-stake-preview-texts`)
+  try {
+    _lsPreviewTexts = JSON.parse(_lsPreviewTexts)
+    _lsPreviewTexts = {
+      ...storageTexts,
+      ..._lsPreviewTexts,
+    }
+  } catch (e) {
+    _lsPreviewTexts = storageTexts
+  }
 
+  const [ isPreviewMode, setIsPreviewMode ] = useState(_lsPreviewMode !== null)
+  
+  const onPreviewDesign = () => {
+    openConfirmWindow({
+      title: `Switch to preview mode`,
+      message: `Switch to preview mode? You can look changes before save`,
+      onConfirm: () => {
+        addNotify(`Preview mode on. Go to site for check it`, `success`)
+        localStorage.setItem(`-nft-stake-preview-text-mode`, true)
+        localStorage.setItem(`-nft-stake-preview-texts`, JSON.stringify(newTexts))
+        setIsPreviewMode(true)
+      }
+    })
+  }
+
+  const offPreviewDesign = () => {
+    addNotify(`Preview mode turn off`, `success`)
+    localStorage.removeItem(`-nft-stake-preview-text-mode`)
+    localStorage.removeItem(`-nft-stake-preview-texts`)
+    setIsPreviewMode(false)
+  }
+
+  useEffect(() => {
+    if (isPreviewMode) {
+      localStorage.setItem(`-nft-stake-preview-texts`, JSON.stringify(newTexts))
+      localStorage.setItem(`-nft-stake-preview-texts-utx`, getUnixTimestamp())
+    }
+  }, [newTexts])
+  
   const doSaveTexts = () => {
     openConfirmWindow({
       title: `Save texts`,
@@ -100,6 +142,7 @@ export default function TabTexts(options) {
       }
     })
   }
+  
   return {
     render: () => {
       return (
@@ -139,6 +182,17 @@ export default function TabTexts(options) {
             })
           })}
           <div className={styles.actionsRowMain}>
+            {isPreviewMode ? (
+              <>
+                <button onClick={offPreviewDesign}>
+                  Turn off preview mode
+                </button>
+              </>
+            ) : (
+              <button onClick={onPreviewDesign}>
+                Turn on preview mode
+              </button>
+            )}
             <button disabled={isSaveTexts} onClick={doSaveTexts}>
               {isSaveTexts ? `Saving...` : `Save changes`}
             </button>
