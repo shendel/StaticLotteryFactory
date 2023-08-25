@@ -1,4 +1,4 @@
 export function getCurrentDomain() {
-  //return 'shendel.github.io'
+  return 'localhost.lottery'
   return window.location.hostname || document.location.host || ''
 }

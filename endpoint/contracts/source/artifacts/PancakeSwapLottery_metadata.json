@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.12+commit.f00d7308"
+		"version": "0.8.0+commit.c7dfd78e"
 	},
 	"language": "Solidity",
 	"output": {
@@ -11,6 +11,11 @@
 						"internalType": "address",
 						"name": "_cakeTokenAddress",
 						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "_OnoutFeeEnabled",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -288,6 +293,32 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "OnoutAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "OnoutFeeEnabled",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -633,6 +664,32 @@
 				"inputs": [
 					{
 						"internalType": "address",
+						"name": "_newFeeAddress",
+						"type": "address"
+					}
+				],
+				"name": "setOnoutAddress",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "_value",
+						"type": "bool"
+					}
+				],
+				"name": "setOnoutFeeEnabled",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
 						"name": "_operatorAddress",
 						"type": "address"
 					}
@@ -939,19 +996,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_tokenAmount",
-						"type": "uint256"
-					}
-				],
-				"name": "withdrawBank2",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "withdrawCooldown",
 				"outputs": [
@@ -1153,7 +1197,7 @@
 		"compilationTarget": {
 			"source/Lottery.sol": "PancakeSwapLottery"
 		},
-		"evmVersion": "london",
+		"evmVersion": "istanbul",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -1166,11 +1210,11 @@
 	},
 	"sources": {
 		"source/Lottery.sol": {
-			"keccak256": "0xd24a5e0897c2f5e2c187f80a06e3fb39b765fba91f16c14b88b1d6e039a56c1a",
+			"keccak256": "0xe1160c86da1eb128bc7df7ffc207402df7e2a723284451d365d24874782c7403",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://92f2620b3d2113f389afc599a929d99c009cd02712aa231c489a0eecdebb2e97",
-				"dweb:/ipfs/QmRqiDJ4366nFT9fCg5gE8GQ6ccaCgCvxCpK3Mq5DqKiJ3"
+				"bzz-raw://ecc891a8b95374aecd95d2e41ef6fc578a4e9dd6802dba704e75713e53445e4b",
+				"dweb:/ipfs/QmNhbxKvKmsBhuszMM8796WNxK1KdRnUfp1Qu2KWUg6Zas"
 			]
 		}
 	},

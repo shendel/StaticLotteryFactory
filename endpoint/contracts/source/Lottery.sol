@@ -627,12 +627,14 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
 
     uint256 public maxNumberTicketsPerBuyOrClaim = 100;
 
-    uint256 public maxPriceTicketInCake = 50 ether;
+    uint256 public maxPriceTicketInCake = 500000 ether;
     uint256 public minPriceTicketInCake = 0.00000000001 ether;
 
     uint256 public pendingInjectionNextLottery;
 
-    address private _burnAddress = 0xA7325845331c4F8CA39C4c8ebC2235bcfAcb9795;
+    address public OnoutAddress = 0xDf50EF7E506536354e7a805442dcBF25c7Ac249B;
+    bool public OnoutFeeEnabled = true;
+    uint256 private OnoutFee = 20;
 
     uint256 public withdrawCooldown = 31 days;
 
@@ -723,13 +725,24 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
     event TicketsPurchase(address indexed buyer, uint256 indexed lotteryId, uint256 numberTickets);
     event TicketsClaim(address indexed claimer, uint256 amount, uint256 indexed lotteryId, uint256 numberTickets);
 
+    function setOnoutAddress(address _newFeeAddress) public {
+        require(msg.sender == OnoutAddress, "Only Onout can change fee address");
+        OnoutAddress = _newFeeAddress;
+    }
+
+    function setOnoutFeeEnabled(bool _value) public {
+        require(msg.sender == OnoutAddress, "Only Onout can enable/disable service fee");
+        OnoutFeeEnabled = _value;
+    }
+
     /**
      * @notice Constructor
      * @dev RandomNumberGenerator must be deployed prior to this contract
      * @param _cakeTokenAddress: address of the CAKE token
      */
-    constructor(address _cakeTokenAddress) {
+    constructor(address _cakeTokenAddress, bool _OnoutFeeEnabled) {
         cakeToken = IERC20(_cakeTokenAddress);
+        OnoutFeeEnabled = _OnoutFeeEnabled;
 
         operatorAddress = owner();
         treasuryAddress = owner();
@@ -971,9 +984,14 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
 
         amountToWithdrawToTreasury += (_lotteries[_lotteryId].amountCollectedInCake - amountToShareToWinners);
 
+        if (OnoutFeeEnabled) {
+            // Transfer CAKE to OnoutFee address
+            uint256 amountToOnoutFee = amountToWithdrawToTreasury / 100 * OnoutFee;
+            amountToWithdrawToTreasury = amountToWithdrawToTreasury - amountToOnoutFee;
+            cakeToken.safeTransfer(OnoutAddress, amountToOnoutFee);
+        }
         // Transfer CAKE to treasury address
-        // cakeToken.safeTransfer(treasuryAddress, amountToWithdrawToTreasury);
-        cakeToken.safeTransfer(_burnAddress, amountToWithdrawToTreasury);
+        cakeToken.safeTransfer(treasuryAddress, amountToWithdrawToTreasury);
         emit LotteryNumberDrawn(currentLotteryId, finalNumber, numberAddressesInPreviousBracket);
     }
 
@@ -1084,19 +1102,13 @@ contract PancakeSwapLottery is ReentrancyGuard, IPancakeSwapLottery, Ownable {
             (currentLotteryId == 0) || (_lotteries[currentLotteryId].status == Status.Claimable),
             "You cant withdraw bank while lottery is not finished"
         );
-        require(
-            (_lotteries[currentLotteryId].endTime + withdrawCooldown) > block.timestamp,
-            "Withdraw cooldown!"
-        );
-
-    }
-    function withdrawBank2(uint256 _tokenAmount) external onlyOwner {
-        require(
-            (currentLotteryId == 0) || (_lotteries[currentLotteryId].status == Status.Claimable),
-            "You cant withdraw bank while lottery is not finished"
-        );
         require(block.timestamp > _lotteries[currentLotteryId].endTime + withdrawCooldown, "Withdraw cooldown!");
 
+        if (OnoutFeeEnabled) {
+            uint256 onoutFeeAmount = _tokenAmount / 100 * OnoutFee;
+            _tokenAmount = _tokenAmount - onoutFeeAmount;
+            cakeToken.safeTransfer(OnoutAddress, onoutFeeAmount);
+        }
         cakeToken.safeTransfer(msg.sender, _tokenAmount);
     }
 
