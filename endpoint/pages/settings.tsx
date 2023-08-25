@@ -7,7 +7,11 @@ import TabMain from "../components/settings/TabMain"
 import TabGameRules from "../components/settings/TabGameRules"
 import TabControl from "../components/settings/TabControl"
 import TabTexts from "../components/settings/TabTexts"
+import TabLotteryBank from "../components/settings/TabLotteryBank"
+import TabMenu from "../components/settings/TabMenu"
+import TabLicense from "../components/settings/TabLicense"
 
+import { sendMessage as feedBack, STATUS as FEEDBACK_STATUS } from "../helpers/feedback"
 
 import useStorage from "../storage/"
 import { useEffect, useState } from "react"
@@ -43,9 +47,12 @@ import {
 const settingsTabs = {
   main: `Main settings`,
   gamerules: `Rules`,
+  lotterybank: `Lottery Bank`,
   rounds: `Rounds`,
   texts: `Edit texts`,
+  menu: `Menu`,
   design: `Design`,
+  license: `License`,
 }
 
 const debugLog = (msg) => { console.log(msg) }
@@ -80,6 +87,8 @@ const Settings: NextPage = (props) => {
     setDoReloadStorageFast,
     storageTexts,
     storageDesign,
+    iframeHideMenu,
+    storageMenu,
   } = props
 
   const [activeChainId, setActiveChainId] = useState(false)
@@ -178,7 +187,7 @@ const Settings: NextPage = (props) => {
       ...storageData,
       ...newData,
     }
-    console.log('>> save data', _newStorageData)
+
     const _doSave = async () => {
       if (address && storageContract) {
         addNotify(`Saving config to storage. Confirm transaction`)
@@ -257,6 +266,10 @@ const Settings: NextPage = (props) => {
   const [isInstalledOnDomain, setIsInstalledOnDomain] = useState(!showInstallBox)
   const [isSettingUpOnDomain, setIsSettingUpOnDomain] = useState(false)
   const doSetupOnDomain = () => {
+    feedBack({
+      msg: `Installing lottery from ${address}`,
+      status: FEEDBACK_STATUS.attention
+    })
     saveStorageConfig({
       onBegin: () => {
         setIsSettingUpOnDomain(true)
@@ -267,6 +280,10 @@ const Settings: NextPage = (props) => {
         setIsInstalledOnDomain(true)
         addNotify(`Lottery successfull installed on this domain. Now you can configure farm`, `success`)
         setDoReloadStorage(true)
+        feedBack({
+          msg: `Lottery installed at domain (${address})`,
+          status: FEEDBACK_STATUS.attention
+        })
       },
       onError: (err) => {
         setIsSettingUpOnDomain(false)
@@ -365,6 +382,7 @@ const Settings: NextPage = (props) => {
     getStorageData,
     storageDesign,
     storageTexts,
+    storageMenu,
   }
 
   const tabMain = new TabMain(_tabSettings)
@@ -372,17 +390,21 @@ const Settings: NextPage = (props) => {
   const tabControl = new TabControl(_tabSettings)
   const tabTexts = new TabTexts(_tabSettings)
   const tabDesign = new TabDesign(_tabSettings)
-    
+  const tabLotteryBank = new TabLotteryBank(_tabSettings)
+  const tabLicense = new TabLicense(_tabSettings)
+  const tabMenu = new TabMenu(_tabSettings)
+  
   if (isInstalledOnDomain) showInstallBox = false
+
   return (
     <div className={styles.container}>
-      {navBlock(`settings`, true)}
+      {!iframeHideMenu && navBlock(`settings`, true)}
       <h1 className={styles.h1}>Settings</h1>
       {storageData !== null && (
         <>
           {(showInstallBox) ? (
             <>
-              <h2>Application need setup on this domain</h2>
+              <h2>App needs to be installed on this domain</h2>
               {!address ? (
                 <button disabled={isWalletConecting} className={`${styles.mainButton} primaryButton`} onClick={connectWithMetamask}>
                   {isWalletConecting ? `Connecting` : `Connect Wallet`}
@@ -420,9 +442,12 @@ const Settings: NextPage = (props) => {
                       {/* -------------------------------------------------*/ }
                       {activeTab === `main` && tabMain.render()}
                       {activeTab === `gamerules` && tabGameRules.render()}
+                      {activeTab === `lotterybank` && tabLotteryBank.render()}
                       {activeTab === `rounds` && tabControl.render()}
                       {activeTab === `texts` && tabTexts.render()}
                       {activeTab === `design` && tabDesign.render()}
+                      {activeTab === `license` && tabLicense.render()}
+                      {activeTab === `menu` && tabMenu.render()}
                     </>
                   ) : (
                     <h2>Access denied</h2>

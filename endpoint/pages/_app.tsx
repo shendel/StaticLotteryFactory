@@ -16,7 +16,7 @@ import StorageStyles from "../components/StorageStyles"
 import { useRef } from "react"
 import { getAssets, getResource } from "../helpers/getAssets"
 import callLotteryMethod from "../helpers/callLotteryMethod"
-
+import checkLicenseKey from "../helpers/payment/checkLicenseKey"
 
 let confirmWindowOnConfirm = () => {}
 let confirmWindowOnCancel = () => {}
@@ -36,15 +36,20 @@ function MyApp({ Component, pageProps }: AppProps) {
     setDoReloadStorageFast,
     storageTexts,
     storageDesign,
+    storageMenu,
   } = useStorage()
   const router = useRouter()
 
   const settingsUrl = (process.env.NODE_ENV && process.env.NODE_ENV !== 'production') ? 'settings' : 'settings.html'
-  const routerBaseName = router.asPath.split('/').reverse()[0];
+  const routerBaseName = router.asPath.split('/').reverse()[0].split('?')[0];
 
-  const isSettingsPage = (routerBaseName === settingsUrl)
-  console.log('>>> isSettingsPage', isSettingsPage, routerBaseName, settingsUrl)
+  const iframeHideMenu = router.asPath.indexOf('isSettingsFrame=true') !== -1
 
+  // CF test
+  //const isSettingsPage = (routerBaseName === settingsUrl)
+  const isSettingsPage = (routerBaseName == 'settings' || routerBaseName == 'settings.html')
+
+console.log('>>> isSettingsPage', isSettingsPage, routerBaseName)
   /* Confirm window */
   const [ isConfirmWindowOpened, setIsConfirmWindowOpened ] = useState(false)
   const [ confirmWindowLabels, setConfirmWindowLabels ] = useState(defaultConfirmWindowLabels)
@@ -181,7 +186,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       match_4: 12.25,
       match_5: 24.5,
       match_6: 49,
-    }
+    },
+    menu: false
   }
   
   const getDesign = getStorageDesign(usedDesign)
@@ -213,6 +219,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         })
         if (storageData.chainId) {
           const chainInfo = CHAIN_INFO(storageData.chainId)
+          console.log('>>> storageMenu', storageMenu)
           setVendorSetting({
             chainId: storageData.chainId,
             chainName: chainInfo.chainName,
@@ -224,13 +231,21 @@ function MyApp({ Component, pageProps }: AppProps) {
               price: false,
               viewDecimals: 2
             },
-            buyTokenLink: false,
+            native: {
+              name: chainInfo.nativeCurrency.name,
+              symbol: chainInfo.nativeCurrency.symbol,
+              decimals: chainInfo.nativeCurrency.decimals,
+            },
+            buyTokenLink: (storageData.buyTokenLink && storageData.buyTokenLink !== ``) ? storageData.buyTokenLink : false,
             numbersCount: ballsCount,
             hideServiceLink: false,
             winPercents: {
               burn: parseFloat(storageData.burn),
               ...storageData.matchRules,
-            }
+            },
+            hideServiceLink: checkLicenseKey(`LOTTERY_OFF_COPYRIGTH`, storageData) || checkLicenseKey(`LOTTERY_FULL_VERSION`, storageData),
+            menu: storageMenu,
+            logo: getDesign('logoUri', `uri`, getAssets(`logo.png`, 'mainLogo'))
           })
         }
       }
@@ -330,6 +345,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                 storageDesign={storageDesign}
                 getText={getText}
                 getDesign={getDesign}
+                iframeHideMenu={iframeHideMenu}
+                storageMenu={storageMenu}
               />
             </>
           )}

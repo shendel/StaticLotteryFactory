@@ -8,12 +8,18 @@ export const CURRENCIES = {
   },
   ETH: {
     name: "Ether",
+    binancePurchaseKey: 'ethereum',
     symbol: 'ETH',
     decimals: 18
   },
   MATIC: {
     name: "Polygon",
     symbol: 'MATIC',
+    decimals: 18
+  },
+  CRO: {
+    name: "Cronos",
+    symbol: 'CRO',
     decimals: 18
   },
   ARBETH: {
@@ -30,7 +36,12 @@ export const CURRENCIES = {
     name: "FTM",
     symbol: 'FTM',
     decimals: 18
-  }
+  },
+  ALV: {
+    name: "ALV",
+    symbol: "ALV",
+    decimals: 18
+  },
 }
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -48,6 +59,10 @@ export const MULTICALL_CONTRACTS = {
   42161: '0x80C7DD17B01855a6D2347444a0FCC36136a314de',
   421611: '0xf27ee99622c3c9b264583dacb2cce056e194494f',
   250: '0x22D4cF72C45F8198CfbF4B568dBdB5A85e8DC0B5',
+  25: '0x0fa4d452693f2f45d28c4ec4d20b236c4010da74',
+  1442: '0x48d7ac38530697aDB91061B6D141C8c763edE565',
+  1101: '0x10DcBEe8afA39a847707e16Aea5eb34c6b01aBA9',
+  3797: '0x48d7ac38530697aDB91061B6D141C8c763edE565',
 }
 
 export const AVAILABLE_NETWORKS_INFO = [
@@ -70,6 +85,16 @@ export const AVAILABLE_NETWORKS_INFO = [
     blockExplorerUrls: ['https://bscscan.com'],
     isTestnet: false,
     nativeCurrency: CURRENCIES.BNB
+  },
+  {
+    slug: 'cronos_mainnet',
+    chainName: 'Cronos',
+    chainId: '0x19',
+    networkVersion: 25,
+    rpcUrls: ['https://evm.cronos.org'],
+    blockExplorerUrls: ['https://cronoscan.com'],
+    isTestnet: false,
+    nativeCurrency: CURRENCIES.CRO
   },
   {
     slug: 'matic_testnet',
@@ -180,6 +205,36 @@ export const AVAILABLE_NETWORKS_INFO = [
     blockExplorerUrls: ['https://ftmscan.com'],
     isTestnet: false,
     nativeCurrency: CURRENCIES.FTM
+  },
+  {
+    slug: 'polygon_zkevm_testnet',
+    chainName: 'Polygon zkEVM testnet',
+    chainId: '0x5A2',
+    networkVersion: 1442,
+    rpcUrls: ['https://rpc.public.zkevm-test.net'],
+    blockExplorerUrls: ['https://testnet-zkevm.polygonscan.com'],
+    isTestnet: true,
+    nativeCurrency: CURRENCIES.ETH
+  },
+  {
+    slug: 'polygon_zkevm_mainnet',
+    chainName: 'Polygon zkEVM',
+    chainId: '0x44D',
+    networkVersion: 1101,
+    rpcUrls: ['https://zkevm-rpc.com'],
+    blockExplorerUrls: ['https://zkevm.polygonscan.com'],
+    isTestnet: false,
+    nativeCurrency: CURRENCIES.ETH
+  },
+  {
+    slug: 'alveychain_mainnet',
+    chainName: 'AlveyChain',
+    chainId: '0xED5',
+    networkVersion: 3797,
+    rpcUrls: ['https://rpc2.alvey.io/rpc'],
+    blockExplorerUrls: ['https://alveyscan.com'],
+    isTestnet: false,
+    nativeCurrency: CURRENCIES.ALV
   },
 ];
 

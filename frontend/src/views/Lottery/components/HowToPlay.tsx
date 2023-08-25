@@ -231,10 +231,12 @@ const PoolAllocations = () => {
               </Text>
             </>
           )}
+          {/*
           <AllocationMatch color="#BDC2C4" text={t('Burn Pool')} />
           <Text textAlign="right" bold>
             {parseFloat(winPercents.burn.toFixed(2))}%
           </Text>
+          */}
         </AllocationGrid>
       </StepCardInner>
     </StyledStepCard>
@@ -257,7 +259,7 @@ const HowToPlay: React.FC = () => {
     {
       label: t('Step %number%', { number: 2 }),
       title: t('Wait for the Draw'),
-      subtitle: t('There are two draws every day: one every 12 hours.'),
+      subtitle: t('The timer is at the top of this page'),
     },
     {
       label: t('Step %number%', { number: 3 }),
